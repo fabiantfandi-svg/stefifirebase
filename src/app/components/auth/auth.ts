@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './auth.css',
 })
 export class Auth {
+  autenticando = false
+  mensajeError = ""
+  iniciarSesionConGoogle(){
 
+  }
 }
