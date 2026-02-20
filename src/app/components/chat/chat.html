@@ -2,17 +2,17 @@
 <div class="chat-container">
     <header class="chat-header">
         <div class="user-info">
-            <img 
+            <img
             src="https://encrypted-tbn0.gstatic.com/
             images?q=tbn:ANd9GcQML8jR5u-K0ruDAmlCRNoHeWR1dphMcNYBEg&s"
-             alt="imagen del usuario" 
+             alt="imagen del usuario"
              class="user-avatar"
              (error) = "manejoErrorImagen()">
              <div class="user-details">
                 <h2 class="user-name">{{nombre}}</h2>
                 <p class="user-email">{{email}}</p>
             </div>
-        </div>     
+        </div>
 
         <div class="header-actions">
             <button
@@ -44,7 +44,106 @@
         }
         <!--Lista de mensajes dependiendo el tipo (usuario o asistente)-->
 
+        <div class="messages-list">
+          @for(mensaje of mensajes; track trackByMensaje($index, mensaje)){
+            <div
+              [class.user-message]="mensaje.tipo =='Usuario'"
+              [class.assistant-message]="mensaje.tipo == 'Asistente'"
+              class="message-wrapper"
+            >
+
+            <!--Validar si el mensaje es del usuario-->
+
+            @if(mensaje.tipo == 'Usuario'){
+
+              <div class="message user-msg">
+                <div class="message-content">
+                  <p>{{mensaje.contenido}}</p>
+                </div>
+                <div class="message-time">
+                  <p>{{mensaje.fechaEnvio}}</p>
+                </div>
+              </div>
+            }
+            <!--Validar si el mensaje es del asistente-->
+            @if(mensaje.tipo == 'Asistente'){
+              <div class="message assistant-msg">
+                <div class="message-avatar">
+                  🤖
+                </div>
+                <div class="message-bubble">
+                <div class="message-content">
+                    <p [innerHTML]="formatearMensajeAsistente(mensaje.contenido)" ></p>
+                  </div>
+                  <div class="message-time">
+                    {{mensaje.fechaEnvio}}
+                    @if(mensaje.estado == 'Error'){
+                      <span class="error-indicator">⚠️</span>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+
+            </div>
+          }
+            <!--Si el asistente esta escribiendo-->
+            @if(asistenteEscribiendo){
+              <div class="message-wrapper assistant-message">
+                <div class="message assistant-msg typing">
+                  <div class="message-avatar">
+                    🤖
+                  </div>
+                  <div class="message-bubble">
+                    <div class="typing-indicator">
+                      <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <p class="typing-text">El asistente esa escribiendo...</p>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            }
+        </div>
     </main>
 
+      <footer class="chat-input">
+        <form
+        class="input-form"
+        (ngSubmit)="enviarMensaje()"
+        #chatForm = "ngForm"
+        >
+          <div class="input-wrapper">
+            <textarea
+            name="mensaje"
+            #mensajeInput
+            [(ngModel)] = "mensajeTexto"
+            placeholder="Escribe tu mensaje aqui, (presiona Enter para enviar o Shift + Enter para salto de linea)"
+            class="message-input"
+            [disabled]="enviandoMensaje || asistenteEscribiendo"
+            rows="1"
+            >
+            </textarea>
+          </div>
+          <button
+          type="submit"
+          class="send-btn"
+          [disabled]="!mensajeTexto.trim() || enviandoMensaje || asistenteEscribiendo"
+          [class.sending]="enviandoMensaje"
+          >
+          @if(enviandoMensaje){
+            <span>c</span>
+          }
+          @if(!enviandoMensaje){
+            <span class="sending-spinner"></span>
+          }
+          </button>
+        </form>
+      </footer>
 
 </div>
