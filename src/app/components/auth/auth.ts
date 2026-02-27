@@ -12,9 +12,9 @@ export class Auth {
   autenticando = false
   mensajeError = ""
   //inyeccion de dependencias
-  private authSerivice = inject(AuthService) 
-  private router = inject(Router) 
-  
+  private authSerivice = inject(AuthService)
+  private router = inject(Router)
+
   //funcion que revisa  la autentificacion - asincrona
   async iniciarSesionConGoogle(): Promise<void>{
     this.autenticando = true
@@ -24,10 +24,12 @@ export class Auth {
       //falta implementar el servicio.
 
       //vamos a simular un usuario ya creado
-      let usuario = null
-      usuario = await new Promise((resolve) => {
-        setTimeout(()=>resolve({nombre:'usuario de prueba'}), 1000)
-      })
+
+      const usuario = await this.authSerivice.iniciarSesion()
+        /*let usuario = null
+        usuario = await new Promise((resolve) => {
+          setTimeout(()=>resolve({nombre:'usuario de prueba'}), 1000)
+        })*/
       if(usuario){
         await this.router.navigate(['/chat'])
       }else{
@@ -45,10 +47,19 @@ export class Auth {
       }
     }finally{
       this.autenticando = false
-    }   
+    }
   }
-  /*ngOnInit(){
-    this.router.navigate(['/chat'])
+  ngOnInit() :void{
+
+    this.authSerivice.estadoAutenticado$.subscribe(autenticado =>{
+      if(autenticado){
+        this.router.navigate(['/chat'])
+      }
+    }
+
+
+    )
+
   }
-  */
+
 }

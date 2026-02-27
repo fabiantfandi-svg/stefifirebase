@@ -11,7 +11,7 @@ export class AuthService {
 
   private auth = inject(Auth)
 
-  //variable de tipo observable 
+  //variable de tipo observable
   usuario$ = user(this.auth)
 
   //variable que devuelve true o false si el usuario esta autenticado
@@ -30,8 +30,12 @@ export class AuthService {
       proveedor.addScope('email');
       proveedor.addScope('profile');
 
+      console.log('antes')
       const resultado = await signInWithPopup(this.auth, proveedor)
+      console.log('despues')
+
       const usuarioFirebase = resultado.user
+
 
       if(usuarioFirebase){
         const usuario : Usuario ={
@@ -41,7 +45,7 @@ export class AuthService {
           foto: usuarioFirebase.photoURL || undefined,
           fechaCreacion: new Date,
           ultimaConexion: new Date
-        } 
+        }
         return usuario
       }
       return null;
