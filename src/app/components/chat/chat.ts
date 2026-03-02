@@ -1,6 +1,11 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef , inject} from '@angular/core';
 import { MensajeChat } from '../../../models/chat';
-import { FormsModule } from '@angular/forms';
+import {FormsModule} from '@angular/forms'
+import { AuthService } from '../../services/auth';
+import { ChatService } from '../../services/chat';
+import { Router } from '@angular/router';
+import { User } from 'firebase/auth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -10,198 +15,98 @@ import { FormsModule } from '@angular/forms';
 })
 export class Chat {
 
-  nombre : string ="Fabian David Torres F."
-  email : string = "fabiantfandi@gmail.com"
-  mensajes: MensajeChat[] = []
-  cargandoHistorial = false
-  asistenteEscribiendo = false
-  mensajeTexto = ""
-  enviandoMensaje = false
-  private debeHacerScroll = true
+  private authService = inject(AuthService)
+  private chatService = inject(ChatService)
+  private router = inject(Router)
 
-  //referenciar a los contenedores
-  @ViewChild('messagesContainer') messagesContainer! : ElementRef
+   @ViewChild('messagesContainer') messagesContainer! : ElementRef
+
+  usuario: User | null = null;
+  mensajes: MensajeChat[]=[]
+  cargandoHistorial=false
+  asistenteEscribiendo=false
+  enviandoMensaje=false
+  mensajeTexto=""
+  mensajeError="";
+
+  private suscripciones : Subscription[]=[]
+
+  private async veriicarAutenticacion():Promise<void>{
+    // a la variable usuario le voyt a asignar el servicio de auth y la funcion  se obtiene
+    this.usuario = this.authService.obtenerUsuario()
+
+    if(!this.usuario){
+      await this.router.navigate(['/auth'])
+      throw new Error ('Usuario no autenticado')
+    }
+  }
+  private async inicializarChat(): Promise<void>{
+    if (!this.usuario){
+      return;
+    }
+    this.cargandoHistorial =true;
+
+    try{
+      await this.chatService.InicializarChat(this.usuario.uid)
+    }catch(error){
+      console.error()
+    }
+
+  }
+
+
+
+
+  private debeHacerScroll = true;
 
   private scrollHaciaAbajo():void{
     try{
-      const container = this.messagesContainer?.nativeElement
+      const container=this.messagesContainer?.nativeElement
       if(container){
         container.scrollTop = container.scrollHeight
       }
     }catch(error){
-      console.error('✖️Error al hacer scroll ')
+      console.error('❌ Error al hacer Scroll')
+
     }
   }
-  ngAfterViewChecked(): void{
+
+  ngAfterViewChecked():void{
     if(this.debeHacerScroll){
       this.scrollHaciaAbajo();
-      this.debeHacerScroll = false
+      this.debeHacerScroll=false
     }
   }
-  
-  manejoErrorImagen() {
+
+  manejoErrorImagen(){
 
   }
-  cerrarSesion(){
+  cerrarSesion(){}
+
+  trackByMensaje(index: number, mensaje :MensajeChat){
 
   }
-  trackByMensaje(index: number, mensaje: MensajeChat){
-  }
-  formatearMensajeAsistente(contenido : string){
+  formatearMensajeAsistente(contenido:string){
     return contenido
-      .replace(/\ng/g, '<br>')
+      .replace(/\n/g,'<br>')
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
   }
 
-  formatearHora(fecha: Date):string{
-    return fecha.toLocaleDateString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit'
-    })
+  formatearHora(fecha: Date): string{
+    return fecha.toLocaleDateString('es-ES',{
+        hour: '2-digit',
+        minute:'2-digit'
+    });
+
   }
+
+  enviarMensaje(){}
 
   ngOnInit(){
-    this.mensajes = this.generarMensajeDemo();
-  }
-  enviarMensaje(){
-
+  
   }
 
-  private generarMensajeDemo():MensajeChat[]{
-    const ahora = new Date();
 
-    return [
-      {
-        id:'id1',
-        contenido:'Hola eres el asistente?',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u1'
-      },{
-        id:'id2',
-        contenido:'Hola soy tu asistente',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a1'
-      },{
-        id:'id3',
-        contenido:'Me puedes resolver una multiplicacion',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u2'
-      },{
-        id:'id4',
-        contenido:'Claro aqui estoy para ayudarte',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a2'
-      },{
-        id:'id5',
-        contenido:'Cuanto es 7x87',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u3'
-      },{
-        id:'id6',
-        contenido:'El resultado de la multiplicacion es: 609',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a3'
-      },
-      {
-        id:'id1',
-        contenido:'Hola eres el asistente?',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u1'
-      },{
-        id:'id2',
-        contenido:'Hola soy tu asistente',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a1'
-      },{
-        id:'id3',
-        contenido:'Me puedes resolver una multiplicacion',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u2'
-      },{
-        id:'id4',
-        contenido:'Claro aqui estoy para ayudarte',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a2'
-      },{
-        id:'id5',
-        contenido:'Cuanto es 7x87',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u3'
-      },{
-        id:'id6',
-        contenido:'El resultado de la multiplicacion es: 609',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a3'
-      },{
-        id:'id1',
-        contenido:'Hola eres el asistente?',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u1'
-      },{
-        id:'id2',
-        contenido:'Hola soy tu asistente',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a1'
-      },{
-        id:'id3',
-        contenido:'Me puedes resolver una multiplicacion',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u2'
-      },{
-        id:'id4',
-        contenido:'Claro aqui estoy para ayudarte',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a2'
-      },{
-        id:'id5',
-        contenido:'Cuanto es 7x87',
-        tipo:'Usuario',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'u3'
-      },{
-        id:'id6',
-        contenido:'El resultado de la multiplicacion es: 609',
-        tipo:'Asistente',
-        fechaEnvio: new Date(ahora.getTime()),
-        estado:'Enviado',
-        usuarioId:'a3'
-      },
-
-    ]
-  }
 
 }
