@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Auth, user, User} from '@angular/fire/auth';
 import { map } from 'rxjs';
 import { Usuario } from '../../models/usuario';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 @Injectable({
   providedIn: 'root',
@@ -60,5 +60,12 @@ export class AuthService {
   }
 
   //Cerrar Sesion
-
+  async cerrarSesion(): Promise<void>{
+    try {
+      await signOut(this.auth)
+    } catch (error) {
+      console.error("Error creando Sesion", error)
+      throw error;
+    }
+  }
 }

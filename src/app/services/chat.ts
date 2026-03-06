@@ -28,7 +28,7 @@ export class ChatService {
   private cargandoHistorial = false;
 
   private asisenteRespondiendo = new BehaviorSubject<boolean>(false);
-  private asistenteRespondiendo$ = this.asisenteRespondiendo.asObservable();
+  public asistenteRespondiendo$ = this.asisenteRespondiendo.asObservable();
 
   async InicializarChat(usuarioId: string): Promise<void>{
     if(!this.cargandoHistorial){
@@ -109,7 +109,7 @@ export class ChatService {
           fechaEnvio: new Date(),
           estado: 'Enviado',
           tipo: 'Asistente'
-          
+
         }
 
         const mensajesActualizados = this.mensajeSubject.value
@@ -121,7 +121,7 @@ export class ChatService {
         }catch(firestoreError){
           console.log('No se pudo guardar el mensaje del asistente', firestoreError)
         }
-        
+
 
     }catch(error){
       console.error('error al procesar el mensaje', error)
@@ -132,7 +132,7 @@ export class ChatService {
       fechaEnvio: new Date(),
       estado: 'Error',
       tipo: 'Asistente'
-      
+
     };
     try{
       await this.firebaseService.guardarMensaje(mensajeError);
@@ -145,7 +145,7 @@ export class ChatService {
     }finally{
       this.asisenteRespondiendo.next(false)
     }
-    
+
   }
 
   limpiarChat(): void{

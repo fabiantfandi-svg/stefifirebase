@@ -24,7 +24,9 @@ export class FirebaseService {
   //funcion para guargar el mensaje
 
   async guardarMensaje(mensaje: MensajeChat): Promise<void>{
+    console.log('mensaje', mensaje)
     try{
+      console.log('ingreso a guardar mensaje')
       //revisar si viene sin usuarioId
       if(!mensaje.usuarioId){
         //devuelvo que el mensaje debe tener un usuario id
@@ -35,7 +37,7 @@ export class FirebaseService {
         throw new Error('El tipo es requerido');
       }
 
-      const coleccionMensajes = collection(this.firestore, 'Mensajes')
+      const coleccionMensajes = collection(this.firestore, 'mensajes')
       //preparar el mensaje
       const mensajeGuardar = {
         usuarioId : mensaje.usuarioId,
