@@ -183,10 +183,10 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked  {
       this.mensajeInput.nativeElement.focus();
     }, 100);
   }
-  manejarTeclaPresionada(evento: KeyboardEvent){
+  manejarTeclaPresionada( evento: KeyboardEvent){
     if(evento.key === "Enter" && !evento.shiftKey){
       evento.preventDefault();
-      this.enviarMensaje
+      this.enviarMensaje();
     }
   }
 
