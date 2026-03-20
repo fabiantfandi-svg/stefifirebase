@@ -6,9 +6,9 @@ import { enviroment } from '../../environments/envioronment';
 
 interface  PeticionGemini{
   contents : contentGemini[]
-  generetionConfig?:{
-    maxOutputTonkens?: number
-    temperatura?: number
+  generationConfig?:{
+    maxOutputTokens?: number
+    temperature?: number
 
   }
   safetySettings: SafetySetting[];
@@ -86,7 +86,7 @@ export class GeminiService {
       ...historialPrevio,
       {
         role:'user',
-      parts: [{text: mensaje}]  
+      parts: [{text: mensaje}]
       }
     ];
 
@@ -111,14 +111,14 @@ export class GeminiService {
 
     const cuerpoPeticion: PeticionGemini={
       contents: contenido,
-      generetionConfig:{
-        maxOutputTonkens:800,
-        temperatura:0.7
+      generationConfig:{
+        maxOutputTokens:800,
+        temperature:0.7
       },
       safetySettings: configuracionesSeguridad
     };
 
-    //vamos a generar la url completa 
+    //vamos a generar la url completa
     const urlCompleta = `${this.apiUrl}?key=${this.apiKey}`
 
     //hacer la peticion a http de conectarnos a la api de gemini
@@ -141,11 +141,11 @@ export class GeminiService {
           }
         }else{
           throw new Error('Respuesta no contiene un formato esperado')
-        } 
+        }
       }),
       catchError(error=>{
         console.log("Error al comunicarse con gemini")
-        let mensajeError = "Error al conectarse con gemini" 
+        let mensajeError = "Error al conectarse con gemini"
 
         if(error.status === 400){
           mensajeError= "Error peticion invalida a gemini, verifique la  configuracion"
