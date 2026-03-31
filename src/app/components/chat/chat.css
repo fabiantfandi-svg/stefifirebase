@@ -1,6 +1,6 @@
 /* Contenedor principal del chat que ocupa toda la pantalla */
 .chat-container {
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -150,7 +150,8 @@
   flex: 1;
   overflow-y: auto;
   padding: 20px;
-  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Mensaje de bienvenida */
@@ -382,9 +383,13 @@
 /* Área de input */
 .chat-input {
   background: #fff;
-  padding: 20px;
+  padding: 10px 15px;
   border-top: 1px solid #e2e8f0;
   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  z-index: 100;
 }
 
 .input-form {
@@ -412,7 +417,7 @@
   border: none;
   background: transparent;
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.4;
   resize: none;
   outline: none;
@@ -429,6 +434,7 @@
 .send-btn {
   width: 40px;
   height: 40px;
+  margin-bottom: 2px;
   border: none;
   background: #667eea;
   color: white;
@@ -486,49 +492,49 @@
   .chat-header {
     padding: 10px 15px;
   }
-  
+
   .user-name {
     font-size: 14px;
   }
-  
+
   .user-email {
     font-size: 11px;
   }
-  
+
   .chat-messages {
     padding: 15px;
   }
-  
+
   .message {
     max-width: 85%;
   }
-  
+
   .stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .welcome-content {
     padding: 20px 10px;
   }
-  
+
   .welcome-content h2 {
     font-size: 20px;
   }
-  
+
   .message-avatar {
     width: 28px;
     height: 28px;
     font-size: 14px;
   }
-  
+
   .chat-input {
     padding: 15px;
   }
-  
+
   .input-wrapper {
     padding: 6px;
   }
-  
+
   .send-btn {
     width: 36px;
     height: 36px;
@@ -540,30 +546,30 @@
   .user-info {
     gap: 8px;
   }
-  
+
   .user-avatar {
     width: 32px;
     height: 32px;
   }
-  
+
   .header-actions {
     gap: 5px;
   }
-  
+
   .stats-btn,
   .logout-btn {
     padding: 6px 8px;
     font-size: 12px;
   }
-  
+
   .message {
     max-width: 90%;
   }
-  
+
   .assistant-msg {
     gap: 8px;
   }
-  
+
   .message-avatar {
     width: 24px;
     height: 24px;
@@ -594,65 +600,65 @@
   .chat-container {
     background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
   }
-  
+
   .chat-header {
     background: #2d3748;
     border-bottom-color: #4a5568;
   }
-  
+
   .user-name {
     color: #f7fafc;
   }
-  
+
   .user-email {
     color: #a0aec0;
   }
-  
+
   .stats-panel {
     background: #2d3748;
     border-bottom-color: #4a5568;
   }
-  
+
   .stats-content h4 {
     color: #f7fafc;
   }
-  
+
   .stat-value {
     color: #e2e8f0;
   }
-  
+
   .welcome-content h2 {
     color: #f7fafc;
   }
-  
+
   .welcome-content p {
     color: #a0aec0;
   }
-  
+
   .assistant-msg .message-content {
     background: #4a5568;
     color: #f7fafc;
     border-color: #718096;
   }
-  
+
   .chat-input {
     background: #2d3748;
     border-top-color: #4a5568;
   }
-  
+
   .input-wrapper {
     background: #4a5568;
     border-color: #718096;
   }
-  
+
   .input-wrapper:focus-within {
     border-color: #667eea;
   }
-  
+
   .message-input {
     color: #f7fafc;
   }
-  
+
   .message-input::placeholder {
     color: #a0aec0;
   }

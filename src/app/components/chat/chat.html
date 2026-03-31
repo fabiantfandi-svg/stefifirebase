@@ -130,20 +130,21 @@
             rows="1"
             >
             </textarea>
+            <button
+            type="submit"
+            class="send-btn"
+            [disabled]="!mensajeTexto.trim() || enviandoMensaje || asistenteEscribiendo"
+            [class.sending]="enviandoMensaje"
+            >
+            @if(!enviandoMensaje){
+              <span>📤</span>
+            }
+            @if(enviandoMensaje){
+              <span class="sending-spinner"></span>
+            }
+            </button>
           </div>
-          <button
-          type="submit"
-          class="send-btn"
-          [disabled]="!mensajeTexto.trim() || enviandoMensaje || asistenteEscribiendo"
-          [class.sending]="enviandoMensaje"
-          >
-          @if(enviandoMensaje){
-            <span>c</span>
-          }
-          @if(!enviandoMensaje){
-            <span class="sending-spinner"></span>
-          }
-          </button>
+
         </form>
       </footer>
 
